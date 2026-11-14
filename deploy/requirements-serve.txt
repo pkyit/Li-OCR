@@ -1,0 +1,11 @@
+# CPU 版运行依赖（K8s 部署 / 无 GPU 环境）
+# 不含 paddlepaddle：流水线会自动降级为 RapidOCR 单引擎
+fastapi==0.162.7
+uvicorn[standard]==0.54.0
+python-multipart==0.0.33
+python-dotenv==1.2.4
+pillow==12.1.0
+numpy==2.3.5
+pypdfium2==5.15.2
+rapidocr==3.10.0
+onnxruntime==1.32.0

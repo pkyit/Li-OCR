@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: li-ocr
+  labels:
+    app.kubernetes.io/name: li-ocr
+    app.kubernetes.io/version: r1.0

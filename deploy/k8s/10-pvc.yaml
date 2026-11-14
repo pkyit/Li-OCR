@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: liocr-data
+  namespace: li-ocr
+spec:
+  accessModes: ["ReadWriteOnce"]
+  # 集群有默认 StorageClass 时可留空；本集群默认是 nfs-client
+  resources:
+    requests:
+      storage: 5Gi

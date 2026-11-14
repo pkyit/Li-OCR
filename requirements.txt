@@ -1,0 +1,16 @@
+# Li-OCR R1.0 后端依赖
+# 说明：paddlepaddle-gpu 需按 CUDA 版本单独安装，见 README
+fastapi==0.162.7
+uvicorn[standard]==0.54.0
+python-multipart==0.0.33
+python-dotenv==1.2.4
+pillow==12.1.0
+numpy==2.3.5
+pypdfium2==5.15.2
+
+# OCR 引擎（可选组合）
+paddleocr==3.7.0
+paddlepaddle-gpu==3.2.1
+# CPU 旁路交叉验证（可选，未安装则自动降级为单引擎）
+# rapidocr
+# onnxruntime

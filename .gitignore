@@ -10,7 +10,7 @@ logs/
 .vscode/
 .classpath
 .project
-.settings
+.settings/
 .factorypath
 .springBeans
 .sts4-cache
@@ -19,3 +19,56 @@ Thumbs.db
 Desktop.ini
 /.workbuddy/
 /.trae/
+
+# ---- Li-OCR 项目忽略规则（R1.0） ----
+# 密钥与凭据：绝对禁止入库
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+kubeconfig*
+*.kubeconfig
+secrets/
+credentials*
+
+# 运行时数据：原始单据、页面图、OCR 结果、数据集均可能含敏感业务数据
+data/
+runtime/
+uploads/
+datasets/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.db
+
+# 模型权重与缓存
+models/
+*.pdmodel
+*.pdiparams
+*.onnx
+*.pt
+*.pth
+.cache/
+.paddlex/
+.paddleocr/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.venv_*/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 前端/工具产物
+node_modules/
+dist/
+build/
+*.tmp
+.screenshots/

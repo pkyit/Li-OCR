@@ -1,0 +1,86 @@
+# 无镜像仓库时的 PoC 部署方式：源码打进 ConfigMap，initContainer 现场装依赖。
+# 生产请改用 deploy/Dockerfile 构建镜像并推送仓库，把下面 image 换成自有镜像。
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: li-ocr
+  namespace: li-ocr
+  labels: {app: li-ocr}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {app: li-ocr}
+  template:
+    metadata:
+      labels: {app: li-ocr}
+      annotations:
+        # 源码或依赖变化后更新此值触发滚动更新
+        liocr/revision: "r1.0-20261114"
+    spec:
+      initContainers:
+        - name: install-deps
+          image: python:3.11-slim
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              mkdir -p /work
+              tar -xzf /src/code.tgz -C /work
+              pip install --no-cache-dir -i https://mirrors.aliyun.com/pypi/simple/ \
+                -r /work/deploy/requirements-serve.txt --target /deps
+          volumeMounts:
+            - {name: src, mountPath: /src, readOnly: true}
+            - {name: work, mountPath: /work}
+            - {name: deps, mountPath: /deps}
+          resources:
+            requests: {cpu: 200m, memory: 256Mi}
+            limits: {cpu: "2", memory: 2Gi}
+      containers:
+        - name: app
+          image: python:3.11-slim
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "uvicorn", "backend.app.main:app",
+                    "--host", "0.0.0.0", "--port", "8080"]
+          env:
+            - {name: PYTHONPATH, value: "/work:/deps"}
+            - {name: PYTHONUNBUFFERED, value: "1"}
+            - {name: LIOCR_HOST, value: "0.0.0.0"}
+            - {name: LIOCR_PORT, value: "8080"}
+            - {name: LIOCR_DATA_DIR, value: "/data"}
+            - {name: LIOCR_DEVICE, value: "cpu"}
+            - {name: LIOCR_WORKERS, value: "1"}
+            - {name: LIOCR_CROSSCHECK, value: "off"}
+            # 口令从 Secret 注入，禁止写进镜像或仓库
+            - name: LIOCR_API_TOKEN
+              valueFrom:
+                secretKeyRef: {name: liocr-secret, key: api-token, optional: true}
+          ports:
+            - {name: http, containerPort: 8080}
+          readinessProbe:
+            httpGet: {path: /api/health, port: http}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /api/health, port: http}
+            initialDelaySeconds: 40
+            periodSeconds: 30
+          resources:
+            requests: {cpu: 500m, memory: 1Gi}
+            limits: {cpu: "3", memory: 4Gi}
+          volumeMounts:
+            - {name: work, mountPath: /work}
+            - {name: src, mountPath: /src, readOnly: true}
+            - {name: deps, mountPath: /deps, readOnly: true}
+            - {name: data, mountPath: /data}
+      volumes:
+        - name: src
+          configMap: {name: liocr-src}
+        - name: work
+          emptyDir: {}
+        - name: deps
+          emptyDir: {}
+        - name: data
+          persistentVolumeClaim: {claimName: liocr-data}

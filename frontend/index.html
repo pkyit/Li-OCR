@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Li-OCR · 单据识别</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="wrap">
+  <div class="grid cols-4" id="metrics"></div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-head">
+      <h2>上传单据</h2>
+      <span class="sub">支持 PDF / PNG / JPG / TIFF，可一次拖入多份；上传后后台排队识别，页面自动刷新进度</span>
+    </div>
+    <div class="card-body">
+      <div class="dropzone" id="dropzone">
+        <div><strong>拖拽文件到此处</strong>，或点击选择</div>
+        <div class="hint">单次最多 50 份，单文件 ≤ 200MB；相同文件按 SHA256 自动去重</div>
+        <input type="file" id="fileInput" multiple accept=".pdf,.png,.jpg,.jpeg,.bmp,.tif,.tiff,.webp" hidden>
+      </div>
+      <div id="uploadResult" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h2>单据列表</h2>
+      <span class="sub" id="docSummary"></span>
+      <div class="spacer" style="flex:1"></div>
+      <select id="statusFilter" style="width:150px">
+        <option value="">全部状态</option>
+        <option value="NEED_REVIEW">待复核</option>
+        <option value="AUTO_PASSED">自动通过</option>
+        <option value="REVIEWED">已复核</option>
+        <option value="PROCESSING">处理中</option>
+        <option value="FAILED">失败</option>
+      </select>
+      <button class="btn sm" id="refreshBtn">刷新</button>
+    </div>
+    <div id="docTable"></div>
+  </div>
+</div>
+
+<script src="assets/common.js"></script>
+<script src="assets/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Li-OCR · 统计与飞轮</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="wrap">
+  <div class="grid cols-4" id="metrics"></div>
+
+  <div class="card">
+    <div class="card-head"><h2>字段级质量分布</h2>
+      <span class="sub">可疑率 = (可疑 + 缺失) / 该字段总数；纠正率 = 人工改写过的字段 / 总数</span></div>
+    <div id="perKey"></div>
+  </div>
+
+  <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:16px">
+    <div class="card">
+      <div class="card-head"><h2>可疑原因分布</h2></div>
+      <div class="card-body"><div class="bars" id="flagBars"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h2>近 14 天处理与纠正</h2>
+        <span class="sub">深色=纠正次数，浅色=入库单据数</span></div>
+      <div class="card-body"><div class="spark" id="spark"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>训练数据沉淀（自迭代闭环）</h2>
+      <span class="sub">只导出人工确认（Gold）样本；用于后续微调识别模型与沉淀评测集</span>
+      <div class="spacer" style="flex:1"></div>
+      <button class="btn primary" id="exportBtn">导出数据集</button>
+    </div>
+    <div id="datasets"></div>
+  </div>
+</div>
+<script src="assets/common.js"></script>
+<script src="assets/stats.js"></script>
+</body>
+</html>

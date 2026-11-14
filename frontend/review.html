@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Li-OCR · 复核</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div class="review-shell">
+  <div class="review-main">
+    <div class="card" style="padding:10px 12px">
+      <div class="flex">
+        <a class="btn sm" href="index.html">← 列表</a>
+        <strong id="docName">加载中…</strong>
+        <span id="docStatus"></span>
+        <div class="spacer" style="flex:1"></div>
+        <span class="meta-line" id="docMeta"></span>
+        <button class="btn sm" id="reprocessBtn">重跑</button>
+      </div>
+      <div class="page-tabs" id="pageTabs" style="margin-top:8px"></div>
+    </div>
+    <div class="viewer" id="viewer">
+      <div class="page-wrap" id="pageWrap">
+        <img class="page" id="pageImg" alt="原件">
+        <div id="overlay" style="position:absolute;inset:0"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fields-panel">
+    <div class="card-head">
+      <h2>字段复核</h2>
+      <span class="sub" id="fieldSummary"></span>
+    </div>
+    <div class="fields-scroll" id="fields"></div>
+    <div class="review-bar">
+      <input type="text" class="who" id="reviewer" placeholder="复核人">
+      <select id="reason" style="width:150px"></select>
+      <div class="spacer"></div>
+      <button class="btn danger" id="rejectBtn">驳回</button>
+      <button class="btn" id="saveBtn">仅保存</button>
+      <button class="btn primary" id="confirmBtn">确认并下一单</button>
+    </div>
+  </div>
+</div>
+<script src="assets/common.js"></script>
+<script src="assets/review.js"></script>
+</body>
+</html>
